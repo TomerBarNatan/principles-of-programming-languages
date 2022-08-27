@@ -1,0 +1,103 @@
+(define append 
+  (lambda(lst1 lst2)
+      (if (eq? lst1 '())
+          (if (eq? lst2 '())
+              '()
+              (cons (car lst2) (append lst1 (cdr lst2)))
+              )
+          (cons (car lst1) (append(cdr lst1) lst2))
+  ))
+)
+
+
+
+(define reverse 
+  (lambda (lst)
+    (if (eq? lst '())
+        '()
+        (if (eq? (cdr lst) '())
+            lst
+            (append (reverse (cdr lst)) (list (car lst)))
+            )
+  ))
+)
+
+(define size
+   (lambda (lst)
+      (if (eq? '() lst)
+      0
+      (+ 1 (size (cdr lst)))
+      )
+   )
+ )
+
+(define dup-lst
+  (lambda (lst n)
+    (if (> (size lst) n)
+        lst
+        (append lst lst)
+        )
+    )
+  )
+
+(define dup-num
+  (lambda (lst n)
+    (if (= n 0)
+        '()
+        (cons (car lst) (dup-num lst (- n 1)))
+        )
+    )
+  )
+
+(define duplicate-items
+   (lambda(lst dup-count)
+     (if (eq? lst '())
+         '()
+         (if (> (size lst) (size dup-count))
+           (duplicate-items lst (dup-lst dup-count (size lst)))
+           (if (= 0 (car dup-count))
+              (duplicate-items (cdr lst) (cdr dup-count))
+              (append (dup-num lst (car dup-count)) (duplicate-items (cdr lst) (cdr dup-count)))
+         )
+      )
+    )
+  )
+)
+
+  
+(define remove-contains
+  (lambda (x lst)
+    (if (eq? lst '())
+        lst
+        (if (eq? (car lst) x)
+            (remove-contains x (cdr lst))
+            (cons (car lst) (remove-contains x (cdr lst)))
+            )
+        )
+    )
+  )
+
+(define payment
+  (lambda (n coins-lst)
+    (if (= 0 n)
+        1
+        (if (< n 0)
+            0
+            (if (eq? coins-lst '())
+                0
+                (+ (payment (- n (car coins-lst)) (cdr coins-lst)) (payment n (remove-contains (car coins-lst) coins-lst)))
+                )
+            )
+        )
+    )
+  )
+
+(define compose-n
+  (lambda( f n)
+        (if (= n 1)
+            f
+            (lambda (x) (f ((compose-n f (- n 1)) x ))
+            )
+    )
+  )
+)
